@@ -37,7 +37,7 @@ function Register() {
             </div>
           </div>
           <Title level={3} style={{ marginBottom: '4px' }}>Create Account</Title>
-          <Text type="secondary">Seamlessly,, Create and organize your Tasks</Text>
+          <Text type="secondary">Seamlesly, Create and organize your Tasks</Text>
         </div>
 
         <Form layout="vertical" size="large" requiredMark={false}>

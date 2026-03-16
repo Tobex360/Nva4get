@@ -36,8 +36,8 @@ function Login() {
               />
             </div>
           </div>
-          <Title level={3} style={{ marginBottom: '4px' }}>Loginn</Title>
-          <Text type="secondary">View yoour Lists</Text>
+          <Title level={3} style={{ marginBottom: '4px' }}>Login</Title>
+          <Text type="secondary">View your Lists</Text>
         </div>
 
         <Form layout="vertical" size="large" requiredMark={false}>
@@ -46,8 +46,8 @@ function Login() {
             <Input prefix={<UserOutlined style={{ color: '#bfbfbf' }} />} placeholder="Username" style={{ borderRadius: '8px' }} />
           </Form.Item>
 
-          <Form.Item name="password" rules={[{ required: true, message: 'Input Your Password' }]}>
-            <Input.Password prefix={<LockOutlined style={{ color: '#bfbfbf' }} />} placeholder="Enter Your Password" style={{ borderRadius: '8px' }} />
+          <Form.Item name="password" rules={[{ required: true, message: 'Password is required' }]}>
+            <Input.Password prefix={<LockOutlined style={{ color: '#bfbfbf' }} />} placeholder="Password" style={{ borderRadius: '8px' }} />
           </Form.Item>
 
           <Form.Item style={{ marginBottom: '16px' }}>
