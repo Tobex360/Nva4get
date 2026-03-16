@@ -11,6 +11,9 @@ export default {
         sec: '#EBE1D1',
         tet: '#E9762B',
       },
+      fontFamily: {
+        play: ["Play", "sans-serif"],
+      },
     },
   },
   plugins: [],
