@@ -1,4 +1,5 @@
-const jwt = require('../middleware/awtjwt');
+const jwt = require('jsonwebtoken');
+const authenticateToken = require('../middleware/awtjwt');
 const User = require('../models/user');
 require('dotenv').config();
 
@@ -10,7 +11,7 @@ async function registerUser(req,res){
     try{
         const duplicate = await User.find({username});
         if(duplicate && duplicate.length > 0){
-            return res.status(400).sebd({message:'username already exists'});
+            return res.status(400).send({message:'username already exists'});
         }
         let user = new User({
             firstname,
@@ -31,16 +32,24 @@ async function registerUser(req,res){
 async function loginUser(req,res){
     try{
         const {username, password} = req.body;
+        console.log("1. Received:", { username, password });
+
+
         const user = await User.findOne({username});
+        console.log("2. User found:", user);
 
         if(!user){
-            return res.status(400).send({message:'Authentication Failed'});
+            return res.status(400).send({message:'User not found'});
         }
+        console.log("3. Stored password:", user.password); // 👈
+        console.log("4. Incoming password:", password); // 👈
         const isPasswordValid = await user.comparePassword(password);
+        console.log("5. Password valid:", isPasswordValid); // 👈 
+
         if(!isPasswordValid){
-            return res.status(400).send({message:'Authentication Failed'});
+            return res.status(401).send({message:'Incorrect password'});
         }
-        let token = await jwt.toString({userId:user?._id},secretKey,{expiresIn:'3h'});
+        let token = await jwt.sign({userId:user?._id},secretKey,{expiresIn:'3h'});
         finalData ={
             userid:user?._id,
             username:user?.username,

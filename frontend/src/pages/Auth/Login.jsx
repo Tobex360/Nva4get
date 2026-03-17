@@ -1,7 +1,8 @@
-import React from 'react';
-import { Input, Button, Form, Card, Typography, Row, Col, Space } from 'antd';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Input, Button, message, Form, Card, Typography, Row, Col, Space } from 'antd';
+import { Link, useNavigate } from 'react-router-dom';
 import User from "../../assets/user.jpg";
+import AuthServices from '../../services/authservices';
 import { 
   UserOutlined, 
   MailOutlined, 
@@ -13,6 +14,30 @@ import './login.css';
 const { Title, Text } = Typography;
 
 function Login() {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (values) => {
+  console.log("Form values being sent:", values);
+  setLoading(true);
+  try {
+    // ✅ Use values from the form directly, not useState
+    const response = await AuthServices.loginUser(values);
+    localStorage.setItem('user', JSON.stringify(response.data));
+    window.dispatchEvent(new Event('authChange'));
+    message.success("User logged in successfully");
+    navigate('/todo');
+  } catch(err) {
+    console.log(err);
+    message.error("Invalid username or password"); // ✅ also add this
+  } finally {
+    setLoading(false);
+  }
+}
+
+
+
+
   return (
     <div className="login-wrapper" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', padding: '20px' }}>
       <Card 
@@ -40,7 +65,7 @@ function Login() {
           <Text type="secondary">View your Lists</Text>
         </div>
 
-        <Form layout="vertical" size="large" requiredMark={false}>
+        <Form layout="vertical" size="large" requiredMark={false} onFinish={handleSubmit}>
 
           <Form.Item name="username" rules={[{ required: true, message: 'Username is required' }]}>
             <Input prefix={<UserOutlined style={{ color: '#bfbfbf' }} />} placeholder="Username" style={{ borderRadius: '8px' }} />
@@ -55,6 +80,7 @@ function Login() {
               type="primary" 
               htmlType="submit" 
               block 
+              loading={loading}
               style={{ 
                 height: '50px', 
                 borderRadius: '8px', 

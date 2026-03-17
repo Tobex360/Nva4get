@@ -26,7 +26,7 @@ function Register() {
         lastname: values.lastname,
         username: values.username,
         email: values.email,
-        password: values.email,
+        password: values.password,
       }
       await AuthServices.registerUser(data);
       message.success("You are successfully registerd");
