@@ -1,6 +1,7 @@
-import React from 'react';
-import { Input, Button, Form, Card, Typography, Row, Col, Space } from 'antd';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Input, Button, message, Form, Card, Typography, Row, Col, Space } from 'antd';
+import { Link, useNavigate } from 'react-router-dom';
+import AuthServices from '../../services/authservices';
 import User from "../../assets/user.jpg";
 import { 
   UserOutlined, 
@@ -13,6 +14,34 @@ import './login.css';
 const { Title, Text } = Typography;
 
 function Register() {
+
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = async(values)=>{
+    setLoading(true);
+    try{
+      const data = {
+        firstname: values.firstname,
+        lastname: values.lastname,
+        username: values.username,
+        email: values.email,
+        password: values.email,
+      }
+      await AuthServices.registerUser(data);
+      message.success("You are successfully registerd");
+      navigate('/login')
+    }catch(err){
+      message.error("Registration Failed");
+    }finally{
+      setLoading(false);
+    }
+  }
+
+
+
+
+
   return (
     <div className="login-wrapper" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', padding: '20px' }}>
       <Card 
@@ -40,7 +69,7 @@ function Register() {
           <Text type="secondary">Seamlesly, Create and organize your Tasks</Text>
         </div>
 
-        <Form layout="vertical" size="large" requiredMark={false}>
+        <Form layout="vertical" size="large" requiredMark={false} onFinish={handleSubmit}>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item name="firstname" rules={[{ required: true, message: 'First name is required' }]}>
@@ -71,6 +100,7 @@ function Register() {
               type="primary" 
               htmlType="submit" 
               block 
+              loading={loading}
               style={{ 
                 height: '50px', 
                 borderRadius: '8px', 
