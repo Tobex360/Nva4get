@@ -26,8 +26,8 @@ function Todo() {
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentEditItem, setCurrentEditItem] = useState(null);
-  const [currentTaskType, setCurrentTasktype] = useState("Incomplete");
-  const [searchedTodo, setSearchedTodo] = useState([]);
+  const [currentTaskType, setCurrentTasktype] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [addForm] = Form.useForm();
   const [editForm] = Form.useForm();
@@ -47,10 +47,13 @@ function Todo() {
     if (userId) getAllToDo();
   }, [userId]);
 
-  const filteredTodos = allToDo.filter((item) => {
-  if (currentTaskType === "Incomplete") return !item.isCompleted;
-  if (currentTaskType === "Complete") return item.isCompleted;
-  return true; // All
+ const displayedTodos = allToDo.filter(item => {
+  // filter by search
+  const matchesSearch = !searchQuery || item.title.toLowerCase().includes(searchQuery.toLowerCase());
+  // filter by type
+  if (currentTaskType === "Incomplete") return matchesSearch && !item.isCompleted;
+  if (currentTaskType === "Complete") return matchesSearch && item.isCompleted;
+  return matchesSearch;
 });
 
   const getAllToDo = async () => {
@@ -154,28 +157,8 @@ function Todo() {
   const handleTypeChange=(value)=>{
     console.log(value);
     setCurrentTasktype(value);
-    if(value==='incomplete'){
-      setCurrentTodoTask(incompletedTodo);
-    } else if(value==='complete'){
-      setCurrentTodoTask(completedTodo)
-    } else{
-      setCurrentTodoTask(allToDo)
-    }
-    getAllToDo();
   }
 
-
-  // search function
-  const handleSearch=(e)=>{
-    let query = (e.target.value);
-    let filteredList = allToDo.filter((item)=>item.title.toLowerCase().match(query.toLowerCase()));
-    console.log(filteredList);
-    if(filteredList.length> 0 && query){
-      setSearchedTodo(filteredList);
-    } else{
-      setSearchedTodo([]);
-    }
-  }
 
   return (
     <div className="flex flex-col">
@@ -184,7 +167,7 @@ function Todo() {
       {/* HEADER */}
       <div className="flex gap-7 pb-6">
         <h1 className='font-bold text-3xl'>Your Tasks</h1>
-        <div className='w-300'><Input type='text' onChange={handleSearch} placeholder='search your task Here....' /></div>
+        <div className='w-300'><Input type='text' value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)} placeholder='search your task Here....' /></div>
         <Button type="primary" onClick={() => setIsAdding(true)}>
           Add Task
         </Button>
@@ -202,7 +185,7 @@ function Todo() {
 
       {/* LIST */}
       <div className={styles.toDoListCardWrapper}>
-        {searchedTodo.length>0? searchedTodo.map((item) => {
+        {displayedTodos.length>0? displayedTodos.map((item) => {
           return(
           <div key={item._id} className={styles.toDoCard}>
             <div>
@@ -229,7 +212,7 @@ function Todo() {
                   <Tooltip title="Mark as Incomplete">
                   <CheckCircleFilled 
                   className={styles.actionIcon}
-                  style={{ color: item.isCompleted ? "green" : "gray" }}
+                  style={{ color: item.isCompleted ? "green" : "blue" }}
                   onClick={()=>toggleStatus(item)}
                   />
                   </Tooltip>
@@ -245,51 +228,7 @@ function Todo() {
               </div>
             </div>
           </div>
-        )}): filteredTodos.length>0 ? filteredTodos.map((item)=>{
-          return(
-          <div key={item._id} className={styles.toDoCard}>
-            <div>
-              <div className={styles.toDoCardHeader}>
-                <h3>{item.title}</h3>
-                <Tag color={item.isCompleted ? 'cyan' : 'red'}>
-                  {item.isCompleted ? 'Completed' : 'Incomplete'}
-                </Tag>
-              </div>
-              <p>{item.description}</p>
-            </div>
-
-            <div className={styles.toDoCardFooter}>
-              <Tag>{getFormattedDate(item.createdAt)}</Tag>
-
-              <div>
-                <Tooltip title="Edit">
-                  <EditOutlined onClick={() => handleEdit(item)} />
-                </Tooltip>
-                <Tooltip title="Delete">
-                  <DeleteOutlined style={{ color: 'red' }} onClick={()=> handleDelete(item)} />
-                </Tooltip>
-                {item.isCompleted ? (
-                  <Tooltip title="Mark as Incomplete">
-                  <CheckCircleFilled 
-                  className={styles.actionIcon}
-                  style={{ color: item.isCompleted ? "green" : "gray" }}
-                  onClick={()=>toggleStatus(item)}
-                  />
-                  </Tooltip>
-                ) : (
-                  <Tooltip title='Mark as complete'>
-                  <CheckCircleOutlined
-                  className={styles.actionIcon}
-                  style={{ color: item.isCompleted ? "green" : "gray" }}
-                  onClick={()=>toggleStatus(item)}
-                  />
-                  </Tooltip>
-                )}
-              </div>
-            </div>
-          </div>
-        )
-        }):
+        )}):
         <div className={styles.noTaskWrapper}>
           <Empty />
         </div>
@@ -322,7 +261,7 @@ function Todo() {
 
       {/* EDIT MODAL */}
       <Modal
-        title="Edit Task"
+        title={currentEditItem ? `Edit ${currentEditItem.title}` :"Edit task"}
         open={isEditing}
         onCancel={() => setIsEditing(false)}
         onOk={() => editForm.submit()}
