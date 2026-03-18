@@ -25,6 +25,10 @@ function Todo() {
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentEditItem, setCurrentEditItem] = useState(null);
+  const [currentTaskType, setCurrentTasktype] = useState("Incomplete");
+  // const [currentTodoTask, setCurrentTodoTask] = useState([]);
+  // const [incompletedTodo, setIncompletedTodo] = useState([])
+  // const [completedTodo, setCompletedTodo] = useState([])
 
   const [addForm] = Form.useForm();
   const [editForm] = Form.useForm();
@@ -43,6 +47,12 @@ function Todo() {
   useEffect(() => {
     if (userId) getAllToDo();
   }, [userId]);
+
+  const filteredTodos = allToDo.filter((item) => {
+  if (currentTaskType === "Incomplete") return !item.isCompleted;
+  if (currentTaskType === "Complete") return item.isCompleted;
+  return true; // All
+});
 
   const getAllToDo = async () => {
     try {
@@ -85,9 +95,20 @@ function Todo() {
     setIsEditing(true);
   };
 
-  
+  // Delete task
+  const handleDelete = async(item)=>{
+    try{
+      const response = await axios.delete(`${API_URL}/todo/delete-to-do/${item._id}`);
+      console.log(response.data);
+      message.success(`${item.title} has been deleted`);
+      getAllToDo();
+    } catch(err){
+      console.log(err);
+      message.error('there has been an error')
+    }
+  }
 
-  // ✅ UPDATE TASK
+  // UPDATE TASK
   const handleUpdateTask = async (values) => {
     try {
       await axios.patch(
@@ -130,6 +151,20 @@ function Todo() {
     return date.toLocaleString();
   };
 
+  // Type change
+  const handleTypeChange=(value)=>{
+    console.log(value);
+    setCurrentTasktype(value);
+    if(value==='incomplete'){
+      setCurrentTodoTask(incompletedTodo);
+    } else if(value==='complete'){
+      setCurrentTodoTask(completedTodo)
+    } else{
+      setCurrentTodoTask(allToDo)
+    }
+    getAllToDo();
+  }
+
   return (
     <div className="flex flex-col">
       <div>Hello {firstname}</div>
@@ -140,11 +175,21 @@ function Todo() {
         <Button type="primary" onClick={() => setIsAdding(true)}>
           Add Task
         </Button>
+        <Select
+             value={currentTaskType}
+             style={{width:180,marginLeft:'10px'}}
+             size ="large"
+             onChange={handleTypeChange}
+             options={[
+              { value: "All", label:'All' },
+              { value: "Incomplete", label:'Incomplete' },
+              { value:"Complete", label:'Complete' }
+            ]}/>
       </div>
 
       {/* LIST */}
       <div className={styles.toDoListCardWrapper}>
-        {allToDo.map((item) => (
+        {filteredTodos.map((item) => (
           <div key={item._id} className={styles.toDoCard}>
             <div>
               <div className={styles.toDoCardHeader}>
@@ -164,7 +209,7 @@ function Todo() {
                   <EditOutlined onClick={() => handleEdit(item)} />
                 </Tooltip>
                 <Tooltip title="Delete">
-                  <DeleteOutlined style={{ color: 'red' }} />
+                  <DeleteOutlined style={{ color: 'red' }} onClick={()=> handleDelete(item)} />
                 </Tooltip>
                 {item.isCompleted ? (
                   <Tooltip title="Mark as Incomplete">
