@@ -85,6 +85,8 @@ function Todo() {
     setIsEditing(true);
   };
 
+  
+
   // ✅ UPDATE TASK
   const handleUpdateTask = async (values) => {
     try {
@@ -102,6 +104,27 @@ function Todo() {
     }
   };
 
+  // Status Change 
+  const toggleStatus = async (item) => {
+  try {
+    const updatedStatus = !item.isCompleted;
+
+    await axios.patch(
+      `${API_URL}/todo/update-to-do/${item._id}`,
+      { isCompleted: updatedStatus }
+    );
+
+    message.success(
+      updatedStatus ? "Marked as completed" : "Marked as incomplete"
+    );
+
+    getAllToDo();
+
+  } catch (err) {
+    console.log(err);
+    message.error("Failed to update status");
+  }
+};
   const getFormattedDate = (value) => {
     const date = new Date(value);
     return date.toLocaleString();
@@ -144,9 +167,21 @@ function Todo() {
                   <DeleteOutlined style={{ color: 'red' }} />
                 </Tooltip>
                 {item.isCompleted ? (
-                  <CheckCircleFilled />
+                  <Tooltip title="Mark as Incomplete">
+                  <CheckCircleFilled 
+                  className={styles.actionIcon}
+                  style={{ color: item.isCompleted ? "green" : "gray" }}
+                  onClick={()=>toggleStatus(item)}
+                  />
+                  </Tooltip>
                 ) : (
-                  <CheckCircleOutlined />
+                  <Tooltip title='Mark as complete'>
+                  <CheckCircleOutlined
+                  className={styles.actionIcon}
+                  style={{ color: item.isCompleted ? "green" : "gray" }}
+                  onClick={()=>toggleStatus(item)}
+                  />
+                  </Tooltip>
                 )}
               </div>
             </div>
