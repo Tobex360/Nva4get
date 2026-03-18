@@ -4,6 +4,7 @@ const cors = require("cors");
 const mongoose = require('mongoose');
 const path = require("path");
 const authRoutes = require('./routes/authRoutes');
+const toDoRoutes = require('./routes/ToDoRoutes')
 
 
 
@@ -16,6 +17,7 @@ app.use(cors());
 app.use(express.json())
 
 app.use('/user', authRoutes);
+app.use('/todo',toDoRoutes);
 
 
 mongoose.connect(DB_URL).then((result)=>{
