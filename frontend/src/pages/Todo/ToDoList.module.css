@@ -17,6 +17,8 @@
     border: 1px solid whitesmoke;
     box-shadow: 0px 0.23px 8px lightgrey;
     padding: 1rem;
+    max-width: 20%;
+    word-wrap: break-word; 
 }
 
 
@@ -27,6 +29,9 @@
     color: grey;
     margin-top: 1rem;
     margin-bottom: 1rem;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal;
 }
 .toDoListCardWrapper{
     display: flex;
