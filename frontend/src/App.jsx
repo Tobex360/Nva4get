@@ -5,6 +5,13 @@ import Navbar from './components/Navbar';
 import Register from './pages/auth/Register';
 import Login from './pages/auth/Login';
 import Todo from './pages/Todo/Todo';
+import Footer from './components/Footer';
+import BackToTop from './components/BackToTop';
+
+
+
+
+
 function App() {
   return (
     <Router>
@@ -15,6 +22,8 @@ function App() {
        <Route path='/login' element={<Login />} />
        <Route path='/todo' element={<Todo />} />
       </Routes>
+      <Footer />
+      <BackToTop />
     </Router>
 
     
