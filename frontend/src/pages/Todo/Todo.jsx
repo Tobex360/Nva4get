@@ -192,7 +192,7 @@ function Todo() {
               onChange={handleTypeChange}
               className="h-10"
               options={[
-                { value: "All", label: 'View All' },
+                { value: "All", label: 'All' },
                 { value: "Incomplete", label: 'Pending' },
                 { value: "Complete", label: 'Completed' }
               ]}
