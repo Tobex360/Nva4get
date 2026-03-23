@@ -118,7 +118,7 @@ function Todo() {
   const handleUpdateTask = async (values) => {
     try {
       await axios.patch(`${API_URL}/todo/update-to-do/${currentEditItem._id}`, values);
-      message.success("Task updated");
+      message.success(`${currentEditItem.title} updated`);
       setIsEditing(false);
       editForm.resetFields();
       getAllToDo();
@@ -131,7 +131,7 @@ function Todo() {
     try {
       const updatedStatus = !item.isCompleted;
       await axios.patch(`${API_URL}/todo/update-to-do/${item._id}`, { isCompleted: updatedStatus });
-      message.success(updatedStatus ? "Marked as completed" : "Marked as incomplete");
+      message.success(updatedStatus ? `${item.title} marked as completed` : `${item.title} marked as incomplete`);
       getAllToDo();
     } catch (err) {
       console.log(err);
@@ -236,20 +236,20 @@ function Todo() {
                       color={item.isCompleted ? 'success' : 'warning'} 
                       className="px-2 py-0.5 rounded-md font-medium text-xs m-0 shrink-0"
                     >
-                      {item.isCompleted ? 'Done' : 'Pending'}
+                      {item.isCompleted ? 'Completed' : 'Pending'}
                     </Tag>
                   </div>
                   <Paragraph 
                     type="secondary" 
                     ellipsis={{ rows: 3 }} 
-                    className="mb-4 italic"
+                    className="mb-4 "
                   >
                     {item.description}
                   </Paragraph>
                 </div>
 
                 <div className="border-t border-gray-100 pt-4 mt-auto flex justify-between items-center">
-                  <Text className="text-xs text-gray-400 tracking-wide font-medium">
+                  <Text className="text-xs text-gray-400 tracking-wide font-play">
                     {getFormattedDate(item.createdAt)}
                   </Text>
 
@@ -304,7 +304,7 @@ function Todo() {
         title={
           <Space>
             <ExpandOutlined className="text-blue-500" />
-            <span>Task Manifest</span>
+            <span>Full Task</span>
           </Space>
         }
         open={isViewing}
@@ -321,7 +321,7 @@ function Todo() {
               <Text type="secondary" className="uppercase text-xs font-bold tracking-widest">Title</Text>
               <Title level={3} style={{ marginTop: 4 }}>{viewItem.title}</Title>
               <Tag color={viewItem.isCompleted ? 'green' : 'gold'}>
-                {viewItem.isCompleted ? 'Completed' : 'Status: Pending Action'}
+                {viewItem.isCompleted ? 'Completed' : 'Pending'}
               </Tag>
             </div>
 
@@ -342,27 +342,27 @@ function Todo() {
 
       {/* ADD MODAL */}
       <Modal
-        title={<Title level={4} className="m-0 font-extrabold">🚀 New Task</Title>}
+        title={<Title level={4} className="m-0 font-extrabold">New Task</Title>}
         open={isAdding}
         onCancel={() => setIsAdding(false)}
         onOk={() => addForm.submit()}
         okText="Add Task"
-        cancelText="Discard"
+        cancelText="Cancel"
         className="rounded-2xl"
         centered
       >
         <Form form={addForm} layout="vertical" onFinish={handleAddTask} requiredMark={false} className="pt-4">
           <Form.Item
             name="title"
-            label={<Text className="font-semibold text-gray-700">What is the objective?</Text>}
+            label={<Text className="font-semibold text-gray-700">Title</Text>}
             rules={[{ required: true, message: "Title is required" }]}
           >
-            <Input placeholder="E.g., Complete UI Mockups" className="rounded-md h-10" />
+            <Input placeholder="E.g., Daily Chores" className="rounded-md h-10" />
           </Form.Item>
 
           <Form.Item
             name="description"
-            label={<Text className="font-semibold text-gray-700">Can you give it context?</Text>}
+            label={<Text className="font-semibold text-gray-700">Description</Text>}
             rules={[{ required: true, message: "Description is required" }]}
           >
             <Input.TextArea placeholder="Break down your steps..." rows={4} className="rounded-md" />
@@ -372,7 +372,7 @@ function Todo() {
 
       {/* EDIT MODAL */}
       <Modal
-        title={<Title level={4} className="m-0 font-extrabold">✏️ Update Task</Title>}
+        title={<Title level={4} className="m-0 font-extrabold">Update Task</Title>}
         open={isEditing}
         onCancel={() => setIsEditing(false)}
         onOk={() => editForm.submit()}
