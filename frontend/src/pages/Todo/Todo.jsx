@@ -157,22 +157,22 @@ function Todo() {
     <div className="bg-gray-50 min-h-screen py-10 px-6 md:px-12">
       <div className="max-w-7xl mx-auto">
         
-        {/* WELCOME BANNER */}
+        {/* WELCOME BANNER
         <div className="mb-8">
           <Text type="secondary" className="text-lg">Welcome back,</Text>
           <Title level={2} style={{ margin: 0 }} className="font-extrabold text-gray-800">
             {username || 'User'} 
           </Title>
-        </div>
+        </div> */}
 
         {/* WORKSPACE CONTROLS */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-10 flex flex-col md:flex-row items-center justify-between gap-4">
           <Space size="middle" className="w-full md:w-auto flex-wrap">
-            <Title level={3} style={{ margin: 0 }} className="font-bold tracking-tight">
-              Workspace
+            <Title level={3} style={{ margin: 0 }} className="font-bold tracking-tight font-play">
+              {username || 'User'}'s Tasks
             </Title>
             <Tag color="blue" className="font-medium px-2 rounded-md">
-              {displayedTodos.length} Tasks
+              {allToDo.length} Tasks
             </Tag>
           </Space>
 
