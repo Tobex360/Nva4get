@@ -35,7 +35,7 @@ function BackToTop() {
         icon={<VerticalAlignTopOutlined />}
         onClick={scrollToTop}
         style={{
-          backgroundColor: '#0D4715', // Matching your Green theme
+          backgroundColor: '#0D4715',
           borderColor: '#0D4715',
           width: '50px',
           height: '50px',
