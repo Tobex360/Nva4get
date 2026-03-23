@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../assets/NVA4GET.svg';
-import { Dropdown, Space, Badge } from 'antd';
-import { ShoppingCartOutlined, MenuOutlined, CloseOutlined, UserOutlined } from '@ant-design/icons';
+import { Dropdown, Space } from 'antd';
+import {  MenuOutlined, CloseOutlined, UserOutlined } from '@ant-design/icons';
 
 function Navbar() {
   const [open, setOpen] = useState(false);
@@ -139,7 +139,7 @@ function Navbar() {
         <div className="hidden sm:flex items-center gap-8">
           <div className="flex gap-6">
             <NavLink to="/" label="Home" />
-            <NavLink to="/todo" label="My Lists" />
+            <NavLink to="/todo" label="Tasks" />
           </div>
           
           <div className="h-6 w-[1px] bg-[#0D4715]/20 mx-2" /> {/* Divider */}
@@ -173,10 +173,10 @@ function Navbar() {
     <div className={`sm:hidden bg-[#EBE1D1] overflow-hidden transition-all duration-300 ease-in-out ${open ? 'max-h-64 border-b border-[#0D4715]/10' : 'max-h-0'}`}>
       <div className="px-4 pt-2 pb-6 space-y-2 flex flex-col items-center">
         <Link to="/" className="w-full text-center py-3 text-[#0D4715] text-lg font-bold hover:bg-[#0D4715]/5 rounded-lg">Home</Link>
-        <Link to="/todo" className="w-full text-center py-3 text-[#0D4715] text-lg font-bold hover:bg-[#0D4715]/5 rounded-lg">My Lists</Link>
+        <Link to="/todo" className="w-full text-center py-3 text-[#0D4715] text-lg font-bold hover:bg-[#0D4715]/5 rounded-lg">Tasks</Link>
         <Dropdown menu={{ items }} trigger={['click']}>
               <div className='relative text-[#0D4715] text-lg font-bold group py-2' onClick={(e) => e.preventDefault()}>
-                <Space>
+                <Space className='cursor-pointer'>
                   <UserOutlined />
                   {username}
                 </Space>
