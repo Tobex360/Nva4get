@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const authenticateToken = require('../middleware/awtjwt');
 const User = require('../models/user');
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 require('dotenv').config();
 
 const secretKey = process.env.JWT_SECRET;
@@ -66,9 +68,58 @@ async function loginUser(req,res){
     }
 }
 
+async function googleLogin(req, res) {
+  try {
+    const { token } = req.body;
+
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+
+    const { email, name } = payload;
+
+    const username = email.split("@")[0];
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = new User({
+        firstname: name,
+        username,
+        email,
+        password: "google-auth"
+      });
+
+      await user.save();
+    }
+
+    const jwtToken = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: '3h' }
+    );
+
+    return res.send({
+      userid: user._id,
+      username: user.username,
+      firstname: user.firstname,
+      email: user.email,
+      token: jwtToken
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(400).send("Google login failed");
+  }
+}
+
 const AuthController = {
     registerUser,
-    loginUser
+    loginUser,
+    googleLogin
 }
 
 module.exports = AuthController;
