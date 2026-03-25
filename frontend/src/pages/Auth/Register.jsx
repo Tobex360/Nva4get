@@ -20,6 +20,8 @@ function Register() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:9000';
+
   const handleSubmit = async(values)=>{
     setLoading(true);
     try{
@@ -46,7 +48,7 @@ function Register() {
   
       // Send token to backend
       const res = await axios.post(
-        "http://localhost:9000/user/google-login",
+        `${API_URL}/user/google-login`,
         {
           token: credentialResponse.credential
         }

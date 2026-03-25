@@ -19,11 +19,12 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:9000';
+
   const handleSubmit = async (values) => {
   console.log("Form values being sent:", values);
   setLoading(true);
   try {
-    // ✅ Use values from the form directly, not useState
     const response = await AuthServices.loginUser(values);
     localStorage.setItem('user', JSON.stringify(response.data));
     window.dispatchEvent(new Event('authChange'));
@@ -43,7 +44,7 @@ const handleGoogleSuccess = async (credentialResponse) => {
 
     // Send token to backend
     const res = await axios.post(
-      "http://localhost:9000/user/google-login",
+      `${API_URL}/user/google-login`,
       {
         token: credentialResponse.credential
       }
