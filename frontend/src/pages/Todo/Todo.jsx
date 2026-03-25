@@ -24,6 +24,7 @@ import {
   ExpandOutlined
 } from '@ant-design/icons';
 import styles from './ToDoList.module.css';
+import { API_URL } from '../../config/api';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -44,7 +45,7 @@ function Todo() {
   const [addForm] = Form.useForm();
   const [editForm] = Form.useForm();
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:9000';
+  // const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:9000';
 
   useEffect(() => {
     const user = localStorage.getItem('user');

@@ -12,6 +12,7 @@ import {
 import './login.css';
 import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
+import { API_URL } from '../../config/api';
 
 const { Title, Text } = Typography;
 
@@ -20,7 +21,7 @@ function Register() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:9000';
+  // const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:9000';
 
   const handleSubmit = async(values)=>{
     setLoading(true);
