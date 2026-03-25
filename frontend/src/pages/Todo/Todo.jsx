@@ -84,6 +84,7 @@ function Todo() {
   };
 
   const handleAddTask = async (values) => {
+    setLoading(true);
     try {
       await axios.post(`${API_URL}/todo/create-to-do`, {
         ...values,
@@ -97,10 +98,13 @@ function Todo() {
       getAllToDo();
     } catch (err) {
       console.log(err);
+    }finally{
+      setLoading(false);
     }
   };
 
   const handleEdit = (item) => {
+    setLoading(true);
     setCurrentEditItem(item);
     editForm.setFieldsValue({
       title: item.title,
@@ -108,6 +112,7 @@ function Todo() {
       isCompleted: item.isCompleted
     });
     setIsEditing(true);
+    setLoading(false)
   };
 
   const handleDelete = async (item) => {
@@ -122,6 +127,7 @@ function Todo() {
   };
 
   const handleUpdateTask = async (values) => {
+    setLoading(true);
     try {
       await axios.patch(`${API_URL}/todo/update-to-do/${currentEditItem._id}`, values);
       message.success(`${currentEditItem.title} updated`);
@@ -130,6 +136,8 @@ function Todo() {
       getAllToDo();
     } catch (err) {
       console.log(err);
+    } finally{
+      setLoading(false);
     }
   };
 
@@ -209,6 +217,7 @@ function Todo() {
               icon={<PlusOutlined />} 
               onClick={() => setIsAdding(true)}
               className="h-10 px-6 font-semibold rounded-lg w-full sm:w-auto shadow-md"
+              loading={loading}
             >
               Add Task
             </Button>
@@ -339,7 +348,7 @@ function Todo() {
             </div>
 
             <div className="mb-6 bg-gray-50 p-4 rounded-lg border border-gray-100">
-              <Text type="secondary" className="uppercase text-xs font-bold tracking-widest block mb-2">Full Description</Text>
+              <Text type="secondary" className="uppercase text-xs font-bold tracking-widest block mb-2">Description</Text>
               <Text className="text-lg leading-relaxed whitespace-pre-wrap">
                 {viewItem.description}
               </Text>
@@ -363,6 +372,7 @@ function Todo() {
         cancelText="Cancel"
         className="rounded-2xl"
         centered
+        loading={loading}
       >
         <Form form={addForm} layout="vertical" onFinish={handleAddTask} requiredMark={false} className="pt-4">
           <Form.Item
@@ -393,6 +403,7 @@ function Todo() {
         cancelText="Discard"
         className="rounded-2xl"
         centered
+        loading={loading}
       >
         <Form form={editForm} layout="vertical" onFinish={handleUpdateTask} requiredMark={false} className="pt-4">
           <Form.Item 
