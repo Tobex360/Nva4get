@@ -1,6 +1,6 @@
 const getApiUrl = () =>{
     if (import.meta.env.PROD){
-        return 'https://nva4get-backend.onrender.com/';
+        return 'https://nva4get-backend.onrender.com';
     }
     return 'http://localhost:9000';
 };
