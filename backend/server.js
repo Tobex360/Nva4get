@@ -34,7 +34,7 @@ app.use('/todo',toDoRoutes);
 mongoose.connect(DB_URL).then((result)=>{
     console.log('succesfully connected to mongodb')
 }).catch(err=>{
-    console.error('❌ MongoDB Connection Failed:');
+    console.error('MongoDB Connection Failed:');
     console.error('Error:', err.message);
     console.error('Full error:', err);
 })

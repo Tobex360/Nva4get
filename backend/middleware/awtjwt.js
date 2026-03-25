@@ -22,7 +22,7 @@ const authenticateToken = (req, res, next) => {
             return res.status(403).json({ message: 'Token is not valid, please log in again' });
         }
 
-        req.user = decoded; // ✅ FIX
+        req.user = decoded;
         next();
     });
 };

@@ -34,19 +34,13 @@ async function registerUser(req,res){
 async function loginUser(req,res){
     try{
         const {username, password} = req.body;
-        console.log("1. Received:", { username, password });
-
 
         const user = await User.findOne({username});
-        console.log("2. User found:", user);
 
         if(!user){
             return res.status(400).send({message:'User not found'});
         }
-        console.log("3. Stored password:", user.password); // 👈
-        console.log("4. Incoming password:", password); // 👈
         const isPasswordValid = await user.comparePassword(password);
-        console.log("5. Password valid:", isPasswordValid); // 👈 
 
         if(!isPasswordValid){
             return res.status(401).send({message:'Incorrect password'});
@@ -118,14 +112,14 @@ async function loginUser(req,res){
 
 async function googleLogin(req, res) {
   console.log("Body received:", req.body);
-  console.log("GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID); // 👈 add this
+  console.log("GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID);
   try {
-    const { token } = req.body; // <-- matches your frontend
+    const { token } = req.body;
 
     if (!token) return res.status(400).json({ error: "Missing Google token" });
 
     const ticket = await client.verifyIdToken({
-      idToken: token, // use token from frontend
+      idToken: token, 
       audience: process.env.GOOGLE_CLIENT_ID
     });
 
