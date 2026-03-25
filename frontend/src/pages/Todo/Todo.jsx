@@ -23,6 +23,7 @@ import {
   SearchOutlined,
   ExpandOutlined
 } from '@ant-design/icons';
+import { Skeleton } from 'antd'; 
 import styles from './ToDoList.module.css';
 import { API_URL } from '../../config/api';
 
@@ -38,6 +39,7 @@ function Todo() {
   const [currentEditItem, setCurrentEditItem] = useState(null);
   const [currentTaskType, setCurrentTasktype] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [isViewing, setIsViewing] = useState(false);
   const [viewItem, setViewItem] = useState(null);
@@ -69,12 +71,15 @@ function Todo() {
   });
 
   const getAllToDo = async () => {
+    setLoading(true);
     try {
       const res = await fetch(`${API_URL}/todo/get-all-to-do/${userId}`);
       const data = await res.json();
       setAllToDo(data);
     } catch (err) {
       console.log(err);
+    } finally{
+      setLoading(false);
     }
   };
 
@@ -212,7 +217,14 @@ function Todo() {
 
         {/* GRID LIST */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {displayedTodos.length > 0 ? (
+          {
+            loading ? (
+            [...Array(4)].map((_, i) => (
+              <Card key={i} className="rounded-xl shadow-sm">
+                <Skeleton active paragraph={{ rows: 3 }} />
+              </Card>
+            ))
+          ):displayedTodos.length > 0 ? (
             displayedTodos.map((item) => (
               <Card
                 key={item._id}
