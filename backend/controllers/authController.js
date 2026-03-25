@@ -68,23 +68,70 @@ async function loginUser(req,res){
     }
 }
 
+// async function googleLogin(req, res) {
+//   try {
+//     const { credential } = req.body;
+
+//     const ticket = await client.verifyIdToken({
+//       idToken: credential,
+//       audience: process.env.GOOGLE_CLIENT_ID,
+//     });
+
+//     const payload = ticket.getPayload();
+
+//     const { email, name } = payload;
+
+//     const username = email.split("@")[0];
+
+//     let user = await User.findOne({ email });
+
+//     if (!user) {
+//       user = new User({
+//         firstname: name,
+//         username,
+//         email,
+//         password: "google-auth"
+//       });
+
+//       await user.save();
+//     }
+
+//     const jwtToken = jwt.sign(
+//       { userId: user._id },
+//       process.env.JWT_SECRET,
+//       { expiresIn: '3h' }
+//     );
+
+//     return res.send({
+//       userid: user._id,
+//       username: user.username,
+//       firstname: user.firstname,
+//       email: user.email,
+//       token: jwtToken
+//     });
+
+//   } catch (err) {
+//     console.log(err);
+//     res.status(400).send("Google login failed");
+//   }
+// }
+
 async function googleLogin(req, res) {
   try {
-    const { token } = req.body;
+    const { token } = req.body; // <-- matches your frontend
+
+    if (!token) return res.status(400).json({ error: "Missing Google token" });
 
     const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: process.env.GOOGLE_CLIENT_ID,
+      idToken: token, // use token from frontend
+      audience: process.env.GOOGLE_CLIENT_ID
     });
 
     const payload = ticket.getPayload();
-
     const { email, name } = payload;
-
     const username = email.split("@")[0];
 
     let user = await User.findOne({ email });
-
     if (!user) {
       user = new User({
         firstname: name,
@@ -92,17 +139,16 @@ async function googleLogin(req, res) {
         email,
         password: "google-auth"
       });
-
       await user.save();
     }
 
     const jwtToken = jwt.sign(
       { userId: user._id },
       process.env.JWT_SECRET,
-      { expiresIn: '3h' }
+      { expiresIn: "3h" }
     );
 
-    return res.send({
+    return res.json({
       userid: user._id,
       username: user.username,
       firstname: user.firstname,
@@ -111,8 +157,8 @@ async function googleLogin(req, res) {
     });
 
   } catch (err) {
-    console.log(err);
-    res.status(400).send("Google login failed");
+    console.error("Google login error:", err);
+    res.status(400).json({ error: "Google login failed" });
   }
 }
 
