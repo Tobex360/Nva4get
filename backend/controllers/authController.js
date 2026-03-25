@@ -40,6 +40,10 @@ async function loginUser(req,res){
         if(!user){
             return res.status(400).send({message:'User not found'});
         }
+        // Block Google accounts from password login
+        if (user.authProvider === 'google') {
+          return res.status(401).send({ message: 'Please use Google to sign in' });
+        }
         const isPasswordValid = await user.comparePassword(password);
 
         if(!isPasswordValid){
@@ -133,7 +137,8 @@ async function googleLogin(req, res) {
         firstname: name,
         username,
         email,
-        password: "google-auth"
+        password: payload.sub,
+        authProvider: 'google'
       });
       await user.save();
     }

@@ -21,6 +21,10 @@ const userSchema = new Schema({
         type:String,
         required:true,
     },
+    authProvider:{
+        type:String,
+        default: 'local'
+    }
     
 });
 
@@ -29,6 +33,8 @@ userSchema.pre("save",async function(){
     const user = this;
     console.log("Pre-save hook running, isModified:", user.isModified('password'));
     if(!user.isModified('password')) return;
+    //  Don't hash if it's a Google account
+    if (user.authProvider === 'google') return;
     let salt = await bcrypt.genSalt(10);
     let hash = await bcrypt.hash(user.password, salt);
     user.password = hash;
