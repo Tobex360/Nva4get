@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 9000;
 const DB_URL = process.env.DB_URL;
 app.use(cors({
     origin:['http://localhost:5173'],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
     credentials: true
 }));
 app.use(express.json())
