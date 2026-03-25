@@ -1,12 +1,12 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Landing from '../src/pages/Landing/Landing';
-import Navbar from '../src/components/Navbar';
-import Register from '../src/pages/auth/Register';
-import Login from '../src/pages/auth/Login';
-import Todo from '../src/pages/Todo/Todo';
-import Footer from '../src/components/Footer';
-import BackToTop from '../src/components/BackToTop';
+import Landing from './pages/Landing/Landing';
+import Navbar from './components/Navbar';
+import Register from './pages/auth/Register';
+import Login from './pages/auth/Login';
+import Todo from './pages/Todo/Todo';
+import Footer from './components/Footer';
+import BackToTop from './components/BackToTop';
 
 
 
