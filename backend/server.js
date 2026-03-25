@@ -13,7 +13,7 @@ require('dotenv').config();
 const PORT = process.env.PORT || 9000;
 
 const DB_URL = process.env.DB_URL;
-app.use(cors({
+app.options("*",cors({
     origin:['http://localhost:5173'],
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
     credentials: true
