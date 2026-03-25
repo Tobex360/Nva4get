@@ -31,7 +31,7 @@ app.use('/user', authRoutes);
 app.use('/todo',toDoRoutes);
 
 // Handle OPTIONS preflight requests (important for PATCH/POST from frontend)
-app.options("/*", cors({
+app.options("/:anyRoute(*)", cors({
     origin: ['http://localhost:5173', 'https://nva4get.vercel.app'],
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
     credentials: true
