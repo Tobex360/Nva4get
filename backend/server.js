@@ -30,13 +30,6 @@ app.use(express.json());
 app.use('/user', authRoutes);
 app.use('/todo',toDoRoutes);
 
-// Handle OPTIONS preflight requests (important for PATCH/POST from frontend)
-app.options("/:anyRoute(*)", cors({
-    origin: ['http://localhost:5173', 'https://nva4get.vercel.app'],
-    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
-    credentials: true
-}));
-
 //Connect To Mongoose
 mongoose.connect(DB_URL).then((result)=>{
     console.log('succesfully connected to mongodb')
