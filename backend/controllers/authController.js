@@ -117,6 +117,8 @@ async function loginUser(req,res){
 // }
 
 async function googleLogin(req, res) {
+  console.log("Body received:", req.body);
+  console.log("GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID); // 👈 add this
   try {
     const { token } = req.body; // <-- matches your frontend
 
