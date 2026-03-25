@@ -53,6 +53,7 @@ const handleGoogleSuccess = async (credentialResponse) => {
 
     localStorage.setItem("user", JSON.stringify(res.data));
     message.success("Google login successful");
+    window.dispatchEvent(new Event('authChange'));
     navigate("/todo");
 
   } catch (err) {
