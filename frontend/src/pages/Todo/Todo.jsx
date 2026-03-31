@@ -12,7 +12,8 @@ import {
   Empty,
   Card,
   Typography,
-  Space
+  Space,
+  Popconfirm
 } from 'antd';
 import {
   CheckCircleFilled,
@@ -284,15 +285,21 @@ function Todo() {
                         onClick={() => handleEdit(item)} 
                       />
                     </Tooltip>
-                    
-                    <Tooltip title="Delete Task">
-                      <Button 
-                        type="text" 
-                        size="small" 
-                        icon={<DeleteOutlined className="text-red-400 hover:text-red-600 text-base" />} 
-                        onClick={() => handleDelete(item)} 
-                      />
-                    </Tooltip>
+                    <Popconfirm
+                      title="Delete Task"
+                      description="Are you sure you want to delete this task?"
+                      onConfirm={() => handleDelete(item)}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                        <Tooltip title="Delete Task">
+                          <Button 
+                            type="text" 
+                            size="small" 
+                            icon={<DeleteOutlined className="text-red-400 hover:text-red-600 text-base" />} 
+                          />
+                        </Tooltip>
+                    </Popconfirm>
 
                     <Tooltip title={item.isCompleted ? "Mark as Incomplete" : "Mark as Complete"}>
                       <Button
