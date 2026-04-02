@@ -70,7 +70,7 @@ function Footer() {
             © {currentYear} NVA4GET. All rights reserved.
           </p>
           <div className="flex gap-6">
-             <span className="text-[#0D4715]/40 text-xs">Powered by Echefu Tobechukwu</span>
+             <span className="text-[#0D4715]/40 text-xs">Powered by <a href="https://my-portfolio-snowy-alpha-98.vercel.app/">Echefu Tobechukwu</a></span>
           </div>
         </div>
       </div>
