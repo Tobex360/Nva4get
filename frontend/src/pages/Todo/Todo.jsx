@@ -28,6 +28,7 @@ import { Skeleton } from 'antd';
 import styles from './ToDoList.module.css';
 import { API_URL } from '../../config/api';
 
+
 const { Title, Text, Paragraph } = Typography;
 
 function Todo() {
@@ -41,6 +42,7 @@ function Todo() {
   const [currentTaskType, setCurrentTasktype] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false)
 
   const [isViewing, setIsViewing] = useState(false);
   const [viewItem, setViewItem] = useState(null);
@@ -48,7 +50,6 @@ function Todo() {
   const [addForm] = Form.useForm();
   const [editForm] = Form.useForm();
 
-  // const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:9000';
 
   useEffect(() => {
     const user = localStorage.getItem('user');
@@ -167,7 +168,55 @@ function Todo() {
     setViewItem(item);
     setIsViewing(true);
   };
+  // Speech to text
 
+ const startListening = () => {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    message.error("Speech recognition not supported in this browser");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = "en-US";
+  recognition.continuous = false;
+
+  recognition.start();
+  setIsListening(true);
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+
+    addForm.setFieldsValue({
+      description: transcript
+    });
+
+    setIsListening(false);
+  };
+
+  recognition.onerror = (event) => {
+    console.log("Speech error:", event);
+
+    if (event.error === "not-allowed") {
+      message.error("Microphone permission denied");
+    } else if (event.error === "no-speech") {
+      message.warning("No speech detected");
+    } else {
+      message.error(`Error: ${event.error}`);
+    }
+
+    setIsListening(false);
+  };
+
+  recognition.onend = () => {
+    setIsListening(false);
+  };
+};
+
+
+
+  
   return (
     <div className="bg-gray-50 min-h-screen py-10 px-6 md:px-12">
       <div className="max-w-7xl mx-auto">
@@ -391,11 +440,38 @@ function Todo() {
           </Form.Item>
 
           <Form.Item
-            name="description"
             label={<Text className="font-semibold text-gray-700">Description</Text>}
-            rules={[{ required: true, message: "Description is required" }]}
+            required
           >
-            <Input.TextArea placeholder="Break down your steps..." rows={4} className="rounded-md" />
+            <div style={{ position: "relative" }}>
+              
+              <Form.Item
+                name="description"
+                rules={[{ required: true, message: "Description is required" }]}
+                noStyle
+              >
+                <Input.TextArea
+                  placeholder="Break down your steps..."
+                  rows={4}
+                  className="rounded-md"
+                />
+              </Form.Item>
+
+              <span
+                onClick={startListening}
+                style={{
+                  position: "absolute",
+                  right: 40,
+                  bottom: 10,
+                  cursor: "pointer",
+                  fontSize: "18px"
+                }}
+              >
+                {isListening ? "🎙️" : "🎤"}
+              </span>
+              
+
+            </div>
           </Form.Item>
         </Form>
       </Modal>
