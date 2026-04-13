@@ -25,6 +25,10 @@ app.use(cors({
 //Parse Json bodies
 app.use(express.json());
 
+app.get('/api/health',(req, res)=>{
+    req.status(200).json({ status: 'ok' })
+})
+
 
 //Routes
 app.use('/user', authRoutes);
