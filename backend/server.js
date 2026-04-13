@@ -25,6 +25,8 @@ app.use(cors({
 //Parse Json bodies
 app.use(express.json());
 
+//health route for uptime robot
+
 app.get('/api/health',(req, res)=>{
     res.status(200).json({ status: 'ok' })
 })
