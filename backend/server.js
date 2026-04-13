@@ -34,6 +34,12 @@ app.get('/api/health',(req, res)=>{
 app.use('/user', authRoutes);
 app.use('/todo',toDoRoutes);
 
+//Start Server
+app.listen(PORT, ()=>{
+    console.log(`Server started at ${PORT}`);
+})
+
+
 //Connect To Mongoose
 mongoose.connect(DB_URL).then((result)=>{
     console.log('succesfully connected to mongodb')
@@ -43,7 +49,3 @@ mongoose.connect(DB_URL).then((result)=>{
     console.error('Full error:', err);
 })
 
-//Start Server
-app.listen(PORT, ()=>{
-    console.log(`Server started at ${PORT}`);
-})
